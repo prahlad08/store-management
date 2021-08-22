@@ -1,0 +1,132 @@
+<%- include("partials/header") %>
+<section id="sales">
+    <h1 style="text-align: center; color: black;">Sales</h1>
+  <form style="margin: 5%;" method="post" action="sales" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label >Product Id</label>
+          <input class="form-control" id="pId" placeholder="Product Id" name="Productid">
+        </div>
+        <div class="form-group col-md-6">
+          <label >Product Name</label>
+          <input class="form-control" id="pName" placeholder="Product Name" name="Productname">
+        </div>
+      </div>
+	  <div class="form-row">
+        <div class="form-group col-md-6">
+          <label >MRP</label>
+          <input class="form-control" id="mrp" type="text" placeholder="MRP" name="Mrp">
+        </div>
+        <div class="form-group col-md-6">
+          <label id="stkmsg">Quantity</label>
+          <input class="form-control" id="qty" type="text" placeholder="Quantity" onkeyup="calcclose()" name="Quantity">
+        </div>
+      </div>
+	  	  <div class="form-row">
+        <div class="form-group col-md-6">
+          <label >Date</label>
+          <input class="form-control" id="date" type="date" placeholder="Date" name="EDate">
+        </div>
+        <div class="form-group col-md-6">
+          <label >Stock Indicator</label>
+			<button  id="stk" class="btn btn-block btn-lg btn-primary" onclick="return false;"></button>
+        </div>
+      </div>
+      <div class="form-row">
+	<div class="form-group col-md-6">
+		        <button type="submit" class="btn btn-block btn-lg btn-outline-primary angled-gradient-button" onclick="btndata.value=1" >Add</button>
+
+	</div>
+	<div class="col-md-6">
+		        <button  id="pp" class="btn btn-block btn-lg btn-outline-danger angled-gradient-button" onclick="printbill()" >Print</button>
+
+	</div>
+	<input id="btndata" name="buttonpress" style="visibility:hidden;" >
+	</form>
+	
+</div>  
+<% var total=0 ;%>
+<br>
+<br>
+<div class="row" id="printable">
+<% if(bill.length>0){%>
+<table class="table table-light" style="margin: 5%;">
+  <thead>
+    <tr>
+      <th scope="col">Sl no</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+  <%console.log("hello");%>
+  <%console.log("-----");
+	console.log(bill);
+	console.log("-----");%>
+  <%for(var i =0;i<bill.length;i++){ele=bill[i]%>
+    <tr>
+      <th scope="row"><%=i+1%></th>
+      <td><%=ele.Productname %></td>
+      <td><%=ele.Quantity %></td>
+      <td><%=ele.Quantity * ele.Mrp %></td>
+    </tr>
+	 
+	<%total+=(ele.Quantity * ele.Mrp)%>
+    <%}%>
+  </tbody>
+  <tr>
+  <td colspan="3">Total</td>
+  <td colspan="2"><%= total%></td>
+  </tr>
+</table>
+</div>
+<button class="btn btn-block btn-lg btn-outline-success angled-gradient-button" onclick="btndata.value=2;location.href='sales';return true;">Confirm</button>
+<%}%>
+
+<script>
+function printbill(){
+ var divToPrint=document.getElementById('printable');
+        var newWin=window.open('','Print-Window');
+        newWin.document.open();
+        newWin.document.write('<html><head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet"><link rel="stylesheet href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"></head><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+        newWin.document.close();
+        setTimeout(function(){newWin.close();},10);
+    // window.location.href="/sales";
+  }
+</script> 
+    
+	<script>
+	var stock;
+	$(function() {
+      $('#pId').keyup(function() {
+        var inpval = $('#pId').val();
+        $.ajax({
+          type: 'POST',
+          data: {
+            pcode: inpval
+          },
+          url: '/autofill/'+inpval,
+          success: function(html) {
+            $("#pName").val(html.name);
+			$("#mrp").val(html.mrp);
+			$("#date").val(html.date);
+			stock=html.stock;
+          }
+        });
+      });
+    });
+var monitor=1,prev;
+  function calcclose(){
+  if(qty.value>stock){
+  qty.value=stock;
+  stk.className="btn btn-block btn-lg btn-danger";
+  stkmsg.innerHTML="Quantity cannot exceed "+stock;
+  }
+  else{
+  stk.className="btn btn-block btn-lg btn-success";
+  }}
+  
+	</script>
+</section>
+<%- include("partials/footer") %>  

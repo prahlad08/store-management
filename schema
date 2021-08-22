@@ -1,0 +1,11 @@
+
+ProductCd varchar(10) PK 
+ProductName varchar(100) 
+PurchasePrice decimal(18,2) 
+PurchaseUnit varchar(20) 
+SellingUnit varchar(20) 
+SupplierCd varchar(10) 
+VATRate float(24,0) 
+UserId varchar(5) 
+EntryDate date 
+Mrp float(24,0)

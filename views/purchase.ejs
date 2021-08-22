@@ -1,0 +1,69 @@
+<%- include("partials/header") %>
+<section id="purchases">
+    <h1 style="text-align: center; color: black;">Purchase</h1>
+  <form style="margin: 5%;" action="/purchase" method="POST">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Product Id</label>
+          <input type="text" class="form-control" name="pid" id="pid" placeholder="Product Id">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Product Name</label>
+          <input type="text" class="form-control" name="pname" id="pname" placeholder="Product Name">
+        </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Quantity</label>
+            <input type="number" min="1" class="form-control" name="qty" placeholder="Quantity">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Supplier</label>
+            <input type="text" class="form-control" name="supplier" placeholder="Supplier">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Supplier Id</label>
+            <input type="number" min="1" class="form-control" name="suppid" placeholder="Supplier Id">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Date of Purchase</label>
+            <input type="date" class="form-control" name="date" id="date" placeholder="Date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Purchase Price</label>
+            <input type="number" min="0" class="form-control" name="pprice" id="pprice" placeholder="Purchase Price">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">MRP</label>
+            <input type="number" min="0" class="form-control" name="mrp" id="mrp" placeholder="MRP">
+          </div>
+        </div>
+         
+      <button type="submit" class="btn btn-block btn-lg btn-outline-primary angled-gradient-button">Add</button>
+    </form>
+</section>
+<script>
+  $(function() {
+    $('#pid').keyup(function() {
+      var inpval = $('#pid').val();
+      $.ajax({
+        type: 'POST',
+        data: {
+          pcode: inpval
+        },
+        url: '/autofill/'+inpval,
+        success: function(html) {
+          $("#pname").val(html.name);
+          $("#mrp").val(html.mrp);
+          $("#pprice").val(html.pp);
+          $("#date").val(html.date);
+        },
+      });
+    });
+  });
+  </script>
+<%- include("partials/footer") %>  

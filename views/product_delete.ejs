@@ -1,0 +1,36 @@
+<%- include("partials/header") %>
+<section id="product">
+    <h1 style="text-align: center; color: black;">Product</h1>
+  <form style="margin: 5%;" method="post" action="delete" autocomplete="off" >
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label >Product Id</label>
+          <input class="form-control" id="pId" placeholder="Product Id" name="Productid" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label >Product Name</label>
+          <input class="form-control" id="pName" placeholder="Product Name" name="Productname" required>
+        </div>
+      
+         
+      <button type="submit" class="btn btn-block btn-lg btn-outline-danger angled-gradient-button">Confirm Delete</button>
+    </form>
+	<script>
+	$(function() {
+      $('#pId').keyup(function() {
+        var inpval = $('#pId').val();
+        $.ajax({
+          type: 'POST',
+          data: {
+            pcode: inpval
+          },
+          url: '/autofill/'+inpval,
+          success: function(html) {
+            $("#pName").val(html.name);
+          }
+        });
+      });
+    });
+	</script>
+</section>
+<%- include("partials/footer") %>  
